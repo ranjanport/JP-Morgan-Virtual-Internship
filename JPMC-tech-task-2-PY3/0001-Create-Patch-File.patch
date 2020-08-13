@@ -1,0 +1,64 @@
+From ac4e267058da7bfe7d57a09dd0e4d7bfbd866e8d Mon Sep 17 00:00:00 2001
+From: Aman Ranjan <amanranjanbharti@gmail.com>
+Date: Thu, 13 Aug 2020 22:31:01 +0530
+Subject: [PATCH] Create Patch File
+
+---
+ src/Graph.tsx | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/src/Graph.tsx b/src/Graph.tsx
+index ec1430e..7035b66 100644
+--- a/src/Graph.tsx
++++ b/src/Graph.tsx
+@@ -1,5 +1,5 @@
+ import React, { Component } from 'react';
+-import { Table } from '@jpmorganchase/perspective';
++import { Table } from '@finos/perspective';
+ import { ServerRespond } from './DataStreamer';
+ import './Graph.css';
+ 
+@@ -14,7 +14,7 @@ interface IProps {
+  * Perspective library adds load to HTMLElement prototype.
+  * This interface acts as a wrapper for Typescript compiler.
+  */
+-interface PerspectiveViewerElement {
++interface PerspectiveViewerElement extends HTMLElement{
+   load: (table: Table) => void,
+ }
+ 
+@@ -32,7 +32,7 @@ class Graph extends Component<IProps, {}> {
+ 
+   componentDidMount() {
+     // Get element to attach the table from the DOM.
+-    const elem: PerspectiveViewerElement = document.getElementsByTagName('perspective-viewer')[0] as unknown as PerspectiveViewerElement;
++    const elem = document.getElementsByTagName('perspective-viewer')[0] as unknown as PerspectiveViewerElement;
+ 
+     const schema = {
+       stock: 'string',
+@@ -49,6 +49,15 @@ class Graph extends Component<IProps, {}> {
+ 
+       // Add more Perspective configurations here.
+       elem.load(this.table);
++      elem.setAttribute('view', 'y_line');
++      elem.setAttribute('column-pivots', '["stock"]');
++      elem.setAttribute('row-pivots', '["timestamp"]');
++      elem.setAttribute('columns','["top_ask_price"]');
++      elem.setAttribute('aggregates', `
++      {"stock": "distinct count",
++      "top_ask_price":"avg",
++      "top_bid_price": "avg",
++      "timestamp":"distinct count"}`)
+     }
+   }
+ 
+@@ -70,4 +79,4 @@ class Graph extends Component<IProps, {}> {
+   }
+ }
+ 
+-export default Graph;
++export default Graph;
+\ No newline at end of file
+-- 
+2.28.0.windows.1
+
